@@ -17,13 +17,13 @@ sandbox for testing out various LLM model locally.
 ### Ollama
   ```
   flexible environment for running, modifying and managing various LLM.
-  [Ollama Official Website](https://ollama.com/)
   ```
+[Ollama Official Website](https://ollama.com/)
 ### ChromaDB
   ```
   open-source AI-native vector database designed for storing and searching large sets of vector embeddings.
-  [ChromaDB Official Website](https://www.trychroma.com/)
   ```
+[ChromaDB Official Website](https://www.trychroma.com/)
 
 ## Workflow 
   ```
@@ -50,6 +50,6 @@ sandbox for testing out various LLM model locally.
   ```
 
 ### Reading material 
-[Running LLM Locally: A Beginner’s Guide to Using Ollama](https://medium.com/@arunpatidar26/run-llm-locally-ollama-8ea296747505)
-[ChromaDB Documentations](https://docs.trychroma.com/docs/overview/getting-started)
-[How to Use Ollama Effectively with LangChain](https://medium.com/towards-agi/how-to-use-ollama-effectively-with-langchain-tutorial-546f5dbffb70)
+[Running LLM Locally: A Beginner’s Guide to Using Ollama](https://medium.com/@arunpatidar26/run-llm-locally-ollama-8ea296747505);
+[ChromaDB Documentations](https://docs.trychroma.com/docs/overview/getting-started);
+[How to Use Ollama Effectively with LangChain](https://medium.com/towards-agi/how-to-use-ollama-effectively-with-langchain-tutorial-546f5dbffb70).
