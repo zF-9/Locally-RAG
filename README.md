@@ -54,6 +54,5 @@ sandbox for testing out various LLM model locally.
 [ChromaDB Documentations](https://docs.trychroma.com/docs/overview/getting-started);
 [How to Use Ollama Effectively with LangChain](https://medium.com/towards-agi/how-to-use-ollama-effectively-with-langchain-tutorial-546f5dbffb70).
 
-### Changelog 
-added opentelemetry : pip install opentelemetry-instrumentation-fastapi>=0.41b0
-added chromadb-telemetry : pip install opentelemetry-instrumentation-chromadb
+### Demo
+<img src="https://github.com/zF-9/Locally-RAG/blob/93e78925d619e9a332e5f3f334ff6a8c01de06d9/assets/localRAG-demo.gif">
