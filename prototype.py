@@ -1,14 +1,33 @@
 # Import required libraries
-from langchain_ollama import OllamaEmbeddings, OllamaLLM
+from langchain_ollama import  OllamaLLM #,OllamaEmbeddings
+from pypdf import PdfReader
 import chromadb
 import os
+from chromadb.utils.embedding_functions.ollama_embedding_function import OllamaEmbeddingFunction
 
 # Define the LLM model to be used
-llm_model = "deepseek-r1:7b"
+llm_model = "llama3.2"
+
+#collect context from user 
+documents = []
+prompt = []
+
+
+reader = PdfReader('sample_pdf\Introduction_to_Machine_Learning.pdf')
+print("extracted pages for input documents are " + str(len(reader.pages)) + " pages")
+
+for x in range(0, len(reader.pages)):
+    # extracting text from page
+    page = reader.pages[x]
+    ext_text = page.extract_text()
+
+print("ze documants isa digested successfoolay!")
+
 
 # Configure ChromaDB
 # Initialize the ChromaDB client with persistent storage in the current directory
-chroma_client = chromadb.PersistentClient(path=os.path.join(os.getcwd(), "chroma_db"))
+x_path = path = path=os.path.join(os.getcwd(), "chroma_db")
+chroma_client = chromadb.PersistentClient(x_path)
 
 # Define a custom embedding function for ChromaDB using Ollama
 class ChromaDBEmbeddingFunction:
@@ -25,23 +44,35 @@ class ChromaDBEmbeddingFunction:
         return self.langchain_embeddings.embed_documents(input)
 
 # Initialize the embedding function with Ollama embeddings
-embedding = ChromaDBEmbeddingFunction(
-    OllamaEmbeddings(
-        model=llm_model,
-        base_url="http://localhost:11434"  # Adjust the base URL as per your Ollama server configuration
-    )
+embedding = OllamaEmbeddingFunction( #ChromaDBEmbeddingFunction(
+    #OllamaEmbeddings(
+        model_name=llm_model,
+        url="http://localhost:11434"  # Adjust the base URL as per your Ollama server configuration
+    #)
 )
 
 # Define a collection for the RAG workflow
-collection_name = "rag_collection_demo_1"
+collection_name = "rag_collection"
 collection = chroma_client.get_or_create_collection(
     name=collection_name,
-    metadata={"description": "A collection for RAG with Ollama - Demo1"},
+    metadata={"description": "A collection for RAG with Ollama - Demo_#I.LOST.COUNT"},
     embedding_function=embedding  # Use the custom embedding function
 )
 
+# User add additional context or prompting 
+# Prompt the user to enter text repeatedly until an empty input is provided
+while True:
+    text_input = input("load additional information (or press Enter to finish): ")
+
+    # Check if the input is empty, indicating the user wants to stop
+    if text_input == "":
+        break  # Exit the loop
+
+    # Add the non-empty input to the list
+    prompt.append(text_input)
+
 # Function to add documents to the ChromaDB collection
-def add_documents_to_collection(documents, ids):
+def add_documents_to_collection(documents, ids): 
     """
     Add documents to the ChromaDB collection.
     
@@ -54,17 +85,31 @@ def add_documents_to_collection(documents, ids):
         ids=ids
     )
 
-# Example: Add sample documents to the collection
-documents = [
-    "Artificial intelligence is the simulation of human intelligence processes by machines.",
-    "Python is a programming language that lets you work quickly and integrate systems more effectively.",
-    "ChromaDB is a vector database designed for AI applications."
-]
-doc_ids = ["doc1", "doc2", "doc3"]
+
+# Document & Prompt pre-process
+documents = [ext_text]
+prompt_c = len(prompt)
+
+doc_ids = []
+for i in range (0, prompt_c + 1):
+    doc_ids.append(f"DOC-{i:03d}")
+
+
+# Print the collected inputs
+print("\nYour collected context are:")
+watch_ = documents + prompt
+watch = watch_[::-1]
+
+documents = watch
+
+print(documents)
+print(doc_ids)
+
 
 # Documents only need to be added once or whenever an update is required. 
 # This line of code is included for demonstration purposes:
 add_documents_to_collection(documents, doc_ids)
+
 
 # Function to query the ChromaDB collection
 def query_chromadb(query_text, n_results=1):
@@ -123,7 +168,7 @@ def rag_pipeline(query_text):
 
 # Example usage
 # Define a query to test the RAG pipeline
-#query = "can you tell me about falon gong?"  # Change the query as needed
-query = input("....your question is ? I ain't got all day \n")
+#query = "what is the Linux requirement to run Tauri framework on your machine"  # Change the query as needed
+query = input("Enter your query: \n")
 response = rag_pipeline(query)
 print("######## Response from LLM ########\n", response)
